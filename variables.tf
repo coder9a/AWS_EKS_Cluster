@@ -50,3 +50,13 @@ variable "instance_type" {
   type        = list(string)
   description = "Instance type that is created"
 }
+
+variable "s3_bucket" {
+  type        = string
+  description = "S3 bucket name"
+}
+
+variable "dynamodb_table_name" {
+  type        = string
+  description = "DynamoDB table name"
+}
