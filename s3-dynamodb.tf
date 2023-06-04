@@ -1,21 +1,21 @@
-# resource "aws_s3_bucket" "weber-s3-bucket" {
+# resource "aws_s3_bucket" "s3-bucket" {
 #   bucket = var.s3_bucket
 #   acl    = "private"
 
 #   tags = {
-#     Name        = "weber"
-#     Environment = "Dev"
+#     Name        = "${var.project}"
+#     Environment = "dev"
 #   }
 # }
 
-# resource "aws_s3_bucket_versioning" "weber-s3-bucket-versioning" {
-#   bucket = aws_s3_bucket.weber-s3-bucket.id
+# resource "aws_s3_bucket_versioning" "s3-bucket-versioning" {
+#   bucket = aws_s3_bucket.s3-bucket.id
 #   versioning_configuration {
 #     status = "Enabled"
 #   }
 # }
 
-# resource "aws_dynamodb_table" "weber-dynamodb-lock-table" {
+# resource "aws_dynamodb_table" "dynamodb-lock-table" {
 #   name         = var.dynamodb_table_name
 #   billing_mode = "PAY_PER_REQUEST"
 #   hash_key     = "LockID"
@@ -26,7 +26,7 @@
 #   }
 
 #   tags = {
-#     Name        = "weber-dyanmodb-table"
+#     Name        = "${var.project}-dyanmodb-table"
 #     Environment = "dev"
 #   }
 # }

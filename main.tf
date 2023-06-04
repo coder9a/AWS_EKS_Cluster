@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "weber-s3-bucket"
+    bucket         = "dynamo-teken-s3-bucket"
     key            = "terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform.tfstate"
+    dynamodb_table = "dynamo-dynamodb-lock-table"
   }
 }
 

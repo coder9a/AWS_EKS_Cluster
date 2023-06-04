@@ -51,12 +51,18 @@ variable "instance_type" {
   description = "Instance type that is created"
 }
 
-variable "s3_bucket" {
+# variable "s3_bucket" {
+#   type        = string
+#   description = "S3 bucket name"
+# }
+
+# variable "dynamodb_table_name" {
+#   type        = string
+#   description = "DynamoDB table name"
+# }
+
+variable "project" {
   type        = string
-  description = "S3 bucket name"
+  description = "Project name"
 }
 
-variable "dynamodb_table_name" {
-  type        = string
-  description = "DynamoDB table name"
-}

@@ -1,5 +1,5 @@
-resource "aws_iam_role" "weber-worker-role" {
-  name = "weber-worker-node-role"
+resource "aws_iam_role" "worker-node-role" {
+  name = "${var.project}-worker-node-role"
 
   assume_role_policy = <<POLICY
 {
@@ -17,26 +17,26 @@ resource "aws_iam_role" "weber-worker-role" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "weber-AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.weber-worker-role.name
+  role       = aws_iam_role.worker-node-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "weber-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.weber-worker-role.name
+  role       = aws_iam_role.worker-node-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "weber-AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.weber-worker-role.name
+  role       = aws_iam_role.worker-node-role.name
 }
 
-resource "aws_eks_node_group" "weber-dev-worker-node" {
-  cluster_name    = aws_eks_cluster.weber-dev-eks.name
-  node_group_name = "weber-dev-worker-node"
-  node_role_arn   = aws_iam_role.weber-worker-role.arn
-  subnet_ids      = [aws_subnet.weber-public-subnet.id, aws_subnet.weber-private-subnet.id]
+resource "aws_eks_node_group" "eks-dev-worker-node" {
+  cluster_name    = aws_eks_cluster.eks-control-plane.name
+  node_group_name = "${var.project}-dev-worker-node"
+  node_role_arn   = aws_iam_role.worker-node-role.arn
+  subnet_ids      = [aws_subnet.public-subnet.id, aws_subnet.private-subnet.id]
 
   scaling_config {
     desired_size = 1
@@ -51,16 +51,16 @@ resource "aws_eks_node_group" "weber-dev-worker-node" {
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
-    aws_iam_role_policy_attachment.weber-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.weber-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.weber-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
   ]
 }
 
 resource "aws_security_group" "worker-node-sg" {
-  name        = "worker-node-sg"
+  name        = "${var.project}-node-sg"
   description = "security group for worker node"
-  vpc_id      = aws_vpc.weber.id
+  vpc_id      = aws_vpc.project_vpc.id
 
   egress {
     from_port   = 0
@@ -70,8 +70,8 @@ resource "aws_security_group" "worker-node-sg" {
   }
 
   tags = {
-    Name                                  = "weber-worker-node-sg"
-    "kubernetes.io/cluster/weber-cluster" = "owned"
+    Name                                  = "${var.project}-worker-node-sg"
+    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
   }
 }
 

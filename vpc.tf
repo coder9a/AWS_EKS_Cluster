@@ -1,16 +1,16 @@
-resource "aws_vpc" "weber" {
+resource "aws_vpc" "project_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
   instance_tenancy     = "default"
 
   tags = {
-    Name = "weber vpc"
+    Name = "${var.project}-vpc"
   }
 }
 
-resource "aws_subnet" "weber-public-subnet" {
-  vpc_id                  = aws_vpc.weber.id
+resource "aws_subnet" "public-subnet" {
+  vpc_id                  = aws_vpc.project_vpc.id
   cidr_block              = var.public_subnet_cidr
   map_public_ip_on_launch = "true"
   availability_zone       = "us-east-1a"
@@ -19,8 +19,8 @@ resource "aws_subnet" "weber-public-subnet" {
   }
 }
 
-resource "aws_subnet" "weber-private-subnet" {
-  vpc_id                  = aws_vpc.weber.id
+resource "aws_subnet" "private-subnet" {
+  vpc_id                  = aws_vpc.project_vpc.id
   cidr_block              = var.private_subnet_cidr
   map_public_ip_on_launch = "false"
   availability_zone       = "us-east-1b"
@@ -29,11 +29,11 @@ resource "aws_subnet" "weber-private-subnet" {
   }
 }
 
-resource "aws_internet_gateway" "weber-igw" {
-  vpc_id = aws_vpc.weber.id
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.project_vpc.id
 
   tags = {
-    Name = "weber-igw"
+    Name = "${var.project}-igw"
   }
 }
 
@@ -41,51 +41,51 @@ resource "aws_eip" "nat-eip" {
   vpc = "true"
 }
 
-resource "aws_nat_gateway" "weber-nat-gtw" {
+resource "aws_nat_gateway" "nat-gtw" {
   allocation_id = aws_eip.nat-eip.id
-  subnet_id     = aws_subnet.weber-private-subnet.id
+  subnet_id     = aws_subnet.private-subnet.id
 
   tags = {
-    Name = "weber-nat-gtw"
+    Name = "${var.project}-nat-gtw"
   }
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
-  depends_on = [aws_internet_gateway.weber-igw]
+  depends_on = [aws_internet_gateway.igw]
 }
 
 resource "aws_route_table" "public-rtb" {
-  vpc_id = aws_vpc.weber.id
+  vpc_id = aws_vpc.project_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.weber-igw.id
+    gateway_id = aws_internet_gateway.igw.id
   }
 
   tags = {
-    Name = "weber-public-rtb"
+    Name = "${var.project}-public-rtb"
   }
 }
 
 resource "aws_route_table_association" "public-rtb-association" {
-  subnet_id      = aws_subnet.weber-public-subnet.id
+  subnet_id      = aws_subnet.public-subnet.id
   route_table_id = aws_route_table.public-rtb.id
 }
 
 resource "aws_route_table" "private-rtb" {
-  vpc_id = aws_vpc.weber.id
+  vpc_id = aws_vpc.project_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.weber-nat-gtw.id
+    gateway_id = aws_nat_gateway.nat-gtw.id
   }
 
   tags = {
-    Name = "weber-private-rtb"
+    Name = "${var.project}-private-rtb"
   }
 }
 
 resource "aws_route_table_association" "private-rtb-association" {
-  subnet_id      = aws_subnet.weber-private-subnet.id
+  subnet_id      = aws_subnet.private-subnet.id
   route_table_id = aws_route_table.private-rtb.id
 }
 

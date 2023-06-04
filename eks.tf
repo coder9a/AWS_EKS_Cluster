@@ -1,5 +1,5 @@
-resource "aws_iam_role" "weber-master-role" {
-  name = "weber-master-node-role"
+resource "aws_iam_role" "master-node-role" {
+  name = "${var.project}-master-node-role"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -19,34 +19,34 @@ resource "aws_iam_role" "weber-master-role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "weber-AmazonEKSClusterPolicy" {
+resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.weber-master-role.name
+  role       = aws_iam_role.master-node-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "weber-AmazonEKSServicePolicy" {
+resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
-  role       = aws_iam_role.weber-master-role.name
+  role       = aws_iam_role.master-node-role.name
 }
 
-resource "aws_eks_cluster" "weber-dev-eks" {
-  name     = "weber-dev-eks"
-  role_arn = aws_iam_role.weber-master-role.arn
+resource "aws_eks_cluster" "eks-control-plane" {
+  name     = "${var.project}-dev-eks"
+  role_arn = aws_iam_role.master-node-role.arn
   vpc_config {
-    subnet_ids = [aws_subnet.weber-public-subnet.id, aws_subnet.weber-private-subnet.id]
+    subnet_ids = [aws_subnet.public-subnet.id, aws_subnet.private-subnet.id]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.
   depends_on = [
-    aws_iam_role_policy_attachment.weber-AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.AmazonEKSClusterPolicy,
   ]
 }
 
 resource "aws_security_group" "master-node-sg" {
   name        = "master-node-sg"
   description = "Cluster communication with worker nodes and internet"
-  vpc_id      = aws_vpc.weber.id
+  vpc_id      = aws_vpc.project_vpc.id
 
   egress {
     from_port   = 0
@@ -56,7 +56,7 @@ resource "aws_security_group" "master-node-sg" {
   }
 
   tags = {
-    Name = "weber-master-node-sg"
+    Name = "${var.project}-master-node-sg"
   }
 }
 
