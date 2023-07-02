@@ -39,9 +39,9 @@ resource "aws_eks_node_group" "eks-dev-worker-node" {
   subnet_ids      = [aws_subnet.public-subnet.id]
 
   scaling_config {
-    desired_size = 1
+    desired_size = 2
     max_size     = 2
-    min_size     = 1
+    min_size     = 2
   }
   ami_type       = var.ami_type
   instance_types = var.instance_type
@@ -70,7 +70,7 @@ resource "aws_security_group" "worker-node-sg" {
   }
 
   tags = {
-    Name                                  = "${var.project}-worker-node-sg"
+    Name                                           = "${var.project}-worker-node-sg"
     "kubernetes.io/cluster/${var.project}-cluster" = "owned"
   }
 }
@@ -83,6 +83,16 @@ resource "aws_security_group_rule" "node-internal" {
   security_group_id        = aws_security_group.worker-node-sg.id
   source_security_group_id = aws_security_group.worker-node-sg.id
   type                     = "ingress"
+}
+
+resource "aws_security_group_rule" "node-inbound" {
+  description       = "Allow incoming internet traffic"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "-1"
+  security_group_id = aws_security_group.worker-node-sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  type              = "ingress"
 }
 
 resource "aws_security_group_rule" "node-cluster-internal" {
