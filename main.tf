@@ -5,12 +5,12 @@ terraform {
       version = "~> 4.0"
     }
   }
-  backend "s3" {
-    bucket         = "dynamo-teken-s3-bucket"
-    key            = "terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "dynamo-dynamodb-lock-table"
-  }
+  # backend "s3" {
+  #   bucket         = "dynamo-teken-s3-bucket"
+  #   key            = "terraform.tfstate"
+  #   region         = "us-east-1"
+  #   dynamodb_table = "dynamo-dynamodb-lock-table"
+  # }
 }
 
 provider "aws" {
