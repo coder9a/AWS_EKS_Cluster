@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "eks-s3-bucket"
+    bucket         = "eks-s3-bucket-cicd"
     key            = "terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "eks-dynamodb-lock-table"
