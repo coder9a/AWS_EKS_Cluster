@@ -49,9 +49,9 @@ variable "EC2_Instance_Type" {
   default = [ "t2.micro" ]
 }
 
-variable "Project" {
+variable "project" {
   type        = string
-  description = "Project name"
+  description = "project name"
 }
 
 variable "Worker_Node_Count" {

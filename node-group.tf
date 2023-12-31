@@ -1,5 +1,5 @@
 resource "aws_iam_role" "worker-node-role" {
-  name = "${var.Project}-worker-node-role"
+  name = "${var.project}-worker-node-role"
 
   assume_role_policy = <<POLICY
 {
@@ -34,7 +34,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
 
 resource "aws_eks_node_group" "eks-dev-worker-node" {
   cluster_name    = aws_eks_cluster.eks-control-plane.name
-  node_group_name = "${var.Project}-dev-worker-node"
+  node_group_name = "${var.project}-dev-worker-node"
   node_role_arn   = aws_iam_role.worker-node-role.arn
   subnet_ids      = [aws_subnet.public-subnet.id]
 
@@ -58,7 +58,7 @@ resource "aws_eks_node_group" "eks-dev-worker-node" {
 }
 
 resource "aws_security_group" "worker-node-sg" {
-  name        = "${var.Project}-node-sg"
+  name        = "${var.project}-node-sg"
   description = "security group for worker node"
   vpc_id      = aws_vpc.project_vpc.id
 
@@ -70,8 +70,8 @@ resource "aws_security_group" "worker-node-sg" {
   }
 
   tags = {
-    Name                                           = "${var.Project}-worker-node-sg"
-    "kubernetes.io/cluster/${var.Project}-cluster" = "owned"
+    Name                                           = "${var.project}-worker-node-sg"
+    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
   }
 }
 

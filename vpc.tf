@@ -5,7 +5,7 @@ resource "aws_vpc" "project_vpc" {
   instance_tenancy     = "default"
 
   tags = {
-    Name = "${var.Project}-vpc"
+    Name = "${var.project}-vpc"
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.project_vpc.id
 
   tags = {
-    Name = "${var.Project}-igw"
+    Name = "${var.project}-igw"
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_nat_gateway" "nat-gtw" {
   subnet_id     = aws_subnet.private-subnet.id
 
   tags = {
-    Name = "${var.Project}-nat-gtw"
+    Name = "${var.project}-nat-gtw"
   }
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
@@ -62,7 +62,7 @@ resource "aws_route_table" "public-rtb" {
   }
 
   tags = {
-    Name = "${var.Project}-public-rtb"
+    Name = "${var.project}-public-rtb"
   }
 }
 
@@ -80,7 +80,7 @@ resource "aws_route_table" "private-rtb" {
   }
 
   tags = {
-    Name = "${var.Project}-private-rtb"
+    Name = "${var.project}-private-rtb"
   }
 }
 

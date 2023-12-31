@@ -4,7 +4,7 @@ pipeline
     environment {
         TF_VAR_aws_access_key = credentials('aws_access_key')
         TF_VAR_aws_secret_key = credentials('aws_secret_key')
-        TF_VAR_Project="${Project}"
+        TF_VAR_project="${project}"
         TF_VAR_AWS_Region="${AWS_Region}"
         TF_VAR_VPC_CIDR="${VPC_CIDR}"
         TF_VAR_Public_Subnet_CIDR="${Public_Subnet_CIDR}"
@@ -19,7 +19,7 @@ pipeline
     }
 
      parameters {
-        string(name: 'Project', defaultValue: 'Test', description: 'Name of terraform project')
+        string(name: 'project', defaultValue: 'Test', description: 'Name of terraform project')
         string(name: 'AWS_Region', defaultValue: 'us-east-1', description: 'AWS region where VPC will be present')
         string(name: 'VPC_CIDR', defaultValue: '10.0.0.0/16', description: 'AWS VPC CIDR')
         string(name: 'Public_Subnet_CIDR', defaultValue: '10.0.1.0/24', description: 'AWS public subnet CIDR')
@@ -43,7 +43,7 @@ pipeline
         stage("Terraform dry-run"){
             steps{                  
                 sh '''
-                echo "Project Name --> "$TF_VAR_Project
+                echo "project Name --> "$TF_VAR_project
                 echo "AWS Region --> "$TF_VAR_AWS_Region
                 echo "AWS VPC CIDR --> "$TF_VAR_VPC_CIDR
                 echo "Public Subnet CIDR --> "$TF_VAR_Public_Subnet_CIDR

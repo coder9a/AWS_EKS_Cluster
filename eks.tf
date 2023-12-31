@@ -1,5 +1,5 @@
 resource "aws_iam_role" "master-node-role" {
-  name = "${var.Project}-master-node-role"
+  name = "${var.project}-master-node-role"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
 }
 
 resource "aws_eks_cluster" "eks-control-plane" {
-  name     = "${var.Project}-dev-eks"
+  name     = "${var.project}-dev-eks"
   role_arn = aws_iam_role.master-node-role.arn
   vpc_config {
     subnet_ids = [aws_subnet.public-subnet.id, aws_subnet.private-subnet.id]
@@ -56,7 +56,7 @@ resource "aws_security_group" "master-node-sg" {
   }
 
   tags = {
-    Name = "${var.Project}-master-node-sg"
+    Name = "${var.project}-master-node-sg"
   }
 }
 
