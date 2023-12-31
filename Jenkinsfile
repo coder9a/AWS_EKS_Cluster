@@ -58,6 +58,7 @@ pipeline
                 echo "Maximum worker node count --> "$TF_VAR_Max_Node_Count
                 echo "Minimum worker node count --> "$TF_VAR_Min_Node_Count
                 echo "Action --> "$TF_VAR_action
+                TF_VAR_EC2_Instance_Type=params.EC2_Instance_Type
                 terraform plan -var="aws_access_key=$TF_VAR_aws_access_key" -var="aws_secret_key=$TF_VAR_aws_secret_key"
                  '''
             }
@@ -65,6 +66,7 @@ pipeline
         stage("Terraform Action"){
             steps{
                 sh '''
+                TF_VAR_EC2_Instance_Type=params.EC2_Instance_Type
                 if [ $action = "plan" ]; then
                     terraform plan -var="aws_access_key=$TF_VAR_aws_access_key" -var="aws_secret_key=$TF_VAR_aws_secret_key"
                 else
@@ -73,6 +75,5 @@ pipeline
                 '''
             }
         }
-
     }
 }
