@@ -16,6 +16,7 @@ pipeline
         TF_VAR_Worker_Node_Count="${Worker_Node_Count}"
         TF_VAR_Max_Node_Count="${Max_Node_Count}"
         TF_VAR_Min_Node_Count="${Min_Node_Count}"
+        TF_VAR_action="${action}"
     }
 
      parameters {
@@ -56,6 +57,7 @@ pipeline
                 echo "Worker Node Count --> "$TF_VAR_Worker_Node_Count
                 echo "Maximum worker node count --> "$TF_VAR_Max_Node_Count
                 echo "Minimum worker node count --> "$TF_VAR_Min_Node_Count
+                echo "Action --> "$TF_VAR_action
                 terraform plan -var="aws_access_key=$TF_VAR_aws_access_key" -var="aws_secret_key=$TF_VAR_aws_secret_key"
                  '''
             }
