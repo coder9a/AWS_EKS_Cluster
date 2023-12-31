@@ -4,7 +4,7 @@ pipeline
     environment {
         TF_VAR_aws_access_key = credentials('aws_access_key')
         TF_VAR_aws_secret_key = credentials('aws_secret_key')
-        TF_VAR_project="${Project}"
+        TF_VAR_Project="${Project}"
         TF_VAR_AWS_Region="${AWS_Region}"
         TF_VAR_VPC_CIDR="${VPC_CIDR}"
         TF_VAR_Public_Subnet_CIDR="${Public_Subnet_CIDR}"
