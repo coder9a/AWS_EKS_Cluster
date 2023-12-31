@@ -1,5 +1,5 @@
 resource "aws_iam_role" "master-node-role" {
-  name = "${var.project}-master-node-role"
+  name = "${var.Project}-master-node-role"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
 }
 
 resource "aws_eks_cluster" "eks-control-plane" {
-  name     = "${var.project}-dev-eks"
+  name     = "${var.Project}-dev-eks"
   role_arn = aws_iam_role.master-node-role.arn
   vpc_config {
     subnet_ids = [aws_subnet.public-subnet.id, aws_subnet.private-subnet.id]
@@ -56,7 +56,7 @@ resource "aws_security_group" "master-node-sg" {
   }
 
   tags = {
-    Name = "${var.project}-master-node-sg"
+    Name = "${var.Project}-master-node-sg"
   }
 }
 
@@ -82,10 +82,10 @@ resource "aws_security_group_rule" "cluster-outbound" {
 
 /*
 
-eks
-create role which can access master node
-security group for master node
-add inbound rule through which worker node can interact
-add outboud rule for internet
+EKS Cluster
+1. Create role which can access master node
+2. Add security group for master node
+3. Add inbound rule through which worker node can interact
+4. Add outboud rule for internet
 
 */

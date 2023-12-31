@@ -3,7 +3,7 @@
 #   acl    = "private"
 
 #   tags = {
-#     Name        = "${var.project}"
+#     Name        = "${var.Project}"
 #     Environment = "dev"
 #   }
 # }
@@ -26,7 +26,7 @@
 #   }
 
 #   tags = {
-#     Name        = "${var.project}-dyanmodb-table"
+#     Name        = "${var.Project}-dyanmodb-table"
 #     Environment = "dev"
 #   }
 # }

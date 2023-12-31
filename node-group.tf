@@ -1,5 +1,5 @@
 resource "aws_iam_role" "worker-node-role" {
-  name = "${var.project}-worker-node-role"
+  name = "${var.Project}-worker-node-role"
 
   assume_role_policy = <<POLICY
 {
@@ -34,19 +34,19 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly" {
 
 resource "aws_eks_node_group" "eks-dev-worker-node" {
   cluster_name    = aws_eks_cluster.eks-control-plane.name
-  node_group_name = "${var.project}-dev-worker-node"
+  node_group_name = "${var.Project}-dev-worker-node"
   node_role_arn   = aws_iam_role.worker-node-role.arn
   subnet_ids      = [aws_subnet.public-subnet.id]
 
   scaling_config {
-    desired_size = 2
-    max_size     = 2
-    min_size     = 2
+    desired_size = var.Worker_Node_Count
+    max_size     = var.Max_Node_Count
+    min_size     = var.Min_Node_Count
   }
-  ami_type       = var.ami_type
-  instance_types = var.instance_type
-  capacity_type  = var.capacity_type
-  disk_size      = var.disk_size
+  ami_type       = var.AMI_Type
+  instance_types = var.EC2_Instance_Type
+  capacity_type  = var.Capacity_Type
+  disk_size      = var.Disk_Size
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
@@ -58,7 +58,7 @@ resource "aws_eks_node_group" "eks-dev-worker-node" {
 }
 
 resource "aws_security_group" "worker-node-sg" {
-  name        = "${var.project}-node-sg"
+  name        = "${var.Project}-node-sg"
   description = "security group for worker node"
   vpc_id      = aws_vpc.project_vpc.id
 
@@ -70,8 +70,8 @@ resource "aws_security_group" "worker-node-sg" {
   }
 
   tags = {
-    Name                                           = "${var.project}-worker-node-sg"
-    "kubernetes.io/cluster/${var.project}-cluster" = "owned"
+    Name                                           = "${var.Project}-worker-node-sg"
+    "kubernetes.io/cluster/${var.Project}-cluster" = "owned"
   }
 }
 

@@ -1,4 +1,4 @@
-variable "aws_region" {
+variable "AWS_Region" {
   type        = string
   description = "region where vpn is configured"
 }
@@ -13,56 +13,58 @@ variable "aws_secret_key" {
   description = "secret key of AWS account"
 }
 
-variable "vpc_cidr" {
+variable "VPC_CIDR" {
   type        = string
   description = "vpc cidr"
-  default     = "10.0.0.0/16"
 }
 
-variable "public_subnet_cidr" {
+variable "Public_Subnet_CIDR" {
   type        = string
   description = "public subnet cidr"
-  default     = "10.0.1.0/24"
 }
 
-variable "private_subnet_cidr" {
+variable "Private_Subnet_CIDR" {
   type        = string
   description = "private subnet cidr"
-  default     = "10.0.2.0/24"
 }
 
-variable "ami_type" {
+variable "AMI_Type" {
   type        = string
   description = "AMI Type"
 }
 
-variable "capacity_type" {
+variable "Capacity_Type" {
   type        = string
   description = "Instance capaity"
 }
 
-variable "disk_size" {
+variable "Disk_Size" {
   type        = number
   description = "disk size of the instance"
 }
 
-variable "instance_type" {
+variable "EC2_Instance_Type" {
   type        = list(string)
   description = "Instance type that is created"
 }
 
-# variable "s3_bucket" {
-#   type        = string
-#   description = "S3 bucket name"
-# }
-
-# variable "dynamodb_table_name" {
-#   type        = string
-#   description = "DynamoDB table name"
-# }
-
-variable "project" {
+variable "Project" {
   type        = string
   description = "Project name"
+}
+
+variable "Worker_Node_Count" {
+  type        = number
+  description = "Number of worker nodes to created"
+}
+
+variable "Max_Node_Count" {
+  type        = number
+  description = "Maximum number of worker nodes"
+}
+
+variable "Min_Node_Count" {
+  type        = number
+  description = "Minimum number of worker nodes"
 }
 

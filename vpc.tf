@@ -1,17 +1,17 @@
 resource "aws_vpc" "project_vpc" {
-  cidr_block           = var.vpc_cidr
+  cidr_block           = var.VPC_CIDR
   enable_dns_support   = "true"
   enable_dns_hostnames = "true"
   instance_tenancy     = "default"
 
   tags = {
-    Name = "${var.project}-vpc"
+    Name = "${var.Project}-vpc"
   }
 }
 
 resource "aws_subnet" "public-subnet" {
   vpc_id                  = aws_vpc.project_vpc.id
-  cidr_block              = var.public_subnet_cidr
+  cidr_block              = var.Public_Subnet_CIDR
   map_public_ip_on_launch = "true"
   availability_zone       = "us-east-1a"
   tags = {
@@ -21,7 +21,7 @@ resource "aws_subnet" "public-subnet" {
 
 resource "aws_subnet" "private-subnet" {
   vpc_id                  = aws_vpc.project_vpc.id
-  cidr_block              = var.private_subnet_cidr
+  cidr_block              = var.Private_Subnet_CIDR
   map_public_ip_on_launch = "false"
   availability_zone       = "us-east-1b"
   tags = {
@@ -33,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.project_vpc.id
 
   tags = {
-    Name = "${var.project}-igw"
+    Name = "${var.Project}-igw"
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_nat_gateway" "nat-gtw" {
   subnet_id     = aws_subnet.private-subnet.id
 
   tags = {
-    Name = "${var.project}-nat-gtw"
+    Name = "${var.Project}-nat-gtw"
   }
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
@@ -62,7 +62,7 @@ resource "aws_route_table" "public-rtb" {
   }
 
   tags = {
-    Name = "${var.project}-public-rtb"
+    Name = "${var.Project}-public-rtb"
   }
 }
 
@@ -80,7 +80,7 @@ resource "aws_route_table" "private-rtb" {
   }
 
   tags = {
-    Name = "${var.project}-private-rtb"
+    Name = "${var.Project}-private-rtb"
   }
 }
 
@@ -89,26 +89,3 @@ resource "aws_route_table_association" "private-rtb-association" {
   route_table_id = aws_route_table.private-rtb.id
 }
 
-
-
-/*
-
-vpc
-public subnet
-private subnet
-internet gateway
-elastic ip
-nat gateway
----------------------------------------------------------------
-eks 
-create role which can access master node
-security group for master node
-add inbound rule through which worker node can interact
-add outboud rule for internet
----------------------------------------------------------------
-create worker node
-create role which can access worker node
-security group for worker node
-add inbound rule through which master node can interact
-
-*/
