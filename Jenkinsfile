@@ -43,7 +43,7 @@ pipeline
         stage("Terraform dry-run"){
             steps{                  
                 sh '''
-                echo "Project Name --> "$TF_VAR_project
+                echo "Project Name --> "$TF_VAR_Project
                 echo "AWS Region --> "$TF_VAR_AWS_Region
                 echo "AWS VPC CIDR --> "$TF_VAR_VPC_CIDR
                 echo "Public Subnet CIDR --> "$TF_VAR_Public_Subnet_CIDR
