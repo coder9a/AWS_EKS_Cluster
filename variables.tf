@@ -46,7 +46,7 @@ variable "Disk_Size" {
 variable "EC2_Instance_Type" {
   type        = list(string)
   description = "Instance type that is created"
-  default = [ "t2.micro" ]
+  default = [ "t2.small" ]
 }
 
 variable "project" {
