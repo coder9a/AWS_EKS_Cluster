@@ -39,6 +39,10 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_eip" "nat-eip" {
   vpc = "true"
+
+  tags = {
+    Name = "${var.project}-ngw-ip"
+  }
 }
 
 resource "aws_nat_gateway" "nat-gtw" {
@@ -89,3 +93,40 @@ resource "aws_route_table_association" "private-rtb-association" {
   route_table_id = aws_route_table.private-rtb.id
 }
 
+# Security group for public subnet
+resource "aws_security_group" "public_sg" {
+  name   = "${var.project}-Public-sg"
+  vpc_id = aws_vpc.project_vpc.id
+
+  tags = {
+    Name = "${var.project}-Public-sg"
+  }
+}
+
+# Security group traffic rules
+resource "aws_security_group_rule" "sg_ingress_public_443" {
+  security_group_id = aws_security_group.public_sg.id
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "sg_ingress_public_80" {
+  security_group_id = aws_security_group.public_sg.id
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "sg_egress_public" {
+  security_group_id = aws_security_group.public_sg.id
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
