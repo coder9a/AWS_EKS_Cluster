@@ -48,13 +48,6 @@ resource "aws_security_group" "master-node-sg" {
   description = "Cluster communication with worker nodes and internet"
   vpc_id      = aws_vpc.project_vpc.id
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "${var.project}-master-node-sg"
   }
