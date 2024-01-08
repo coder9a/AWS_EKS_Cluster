@@ -1,4 +1,6 @@
 # Infrastructure Deployment with Terraform
+![eks drawio](https://github.com/coder9a/AWS_EKS_Cluster/assets/42884781/e505ae55-b8a2-490c-b5d1-09a0d0339856)
+![image](https://github.com/coder9a/AWS_EKS_Cluster/assets/42884781/cdb30cf2-abb3-47fd-ba3c-b10e6ea90d6e)
 
 Provisioning production-ready Amazon Elastic Kubernetes Service (EKS) clusters using Terraform.
 This Terraform script deploys a Kubernetes infrastructure on AWS with the following components:
