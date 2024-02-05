@@ -29,7 +29,7 @@ Network Address Translation (NAT) Gateway to allow private subnet resources to i
 
 ## 2. EKS ControlPlane
 
-### 2.1 Create Role for Accessing Master Node
+### 2.1 Create Role for Controlplane
 
 An IAM role that grants permissions to access the EKS control plane (master nodes).
 
